@@ -1,0 +1,271 @@
+-- Cross compiling to: KOS-GNU-static 1.0.1.4
+-- Processor: arm
+-- Compiler: GCC
+-- CMake generates Unix Makefiles
+-- IMAGE_BINARY_DIR_BIN: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit
+-- IMAGE_BINARY_DIR_BIN: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build
+[  8%] Generating EinitQemu-kss/Einit.edl.h
+[  8%] Built target EinitQemu-edl
+[ 16%] Generating Hello.edl.h
+[ 25%] Generating ../_headers_/hello/Hello.edl.h
+[ 33%] Built target hello_edl_files
+[ 50%] Built target Hello
+[ 58%] Generating EinitQemu-kss/EinitQemu.c
+Scanning dependencies of target EinitQemu
+[ 66%] Building C object einit/CMakeFiles/EinitQemu.dir/EinitQemu-kss/EinitQemu.c.obj
+[ 75%] Linking C executable EinitQemu
+[ 75%] Built target EinitQemu
+[ 83%] Generating EinitQemu-kss/ksm.module, EinitQemu-kss/security.psl.audit.c
+[ 91%] Generating KasperskyOS image: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/kos-qemu-image
+/opt/KasperskyOS-Community-Edition-1.0.1.4/toolchain/bin/arm-kos-gcc
+Checking root directory.. /opt/KasperskyOS-Community-Edition-1.0.1.4/sysroot-arm-kos
+Checking entity: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/hello/Hello... ok
+Checking entity: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/EinitQemu-kss/ksm.module... ok
+Checking linker.. /opt/KasperskyOS-Community-Edition-1.0.1.4/toolchain/bin/arm-kos-gcc
+Checking assembler.. /opt/KasperskyOS-Community-Edition-1.0.1.4/toolchain/bin/arm-kos-gcc
+Checking piggy asm.. /tmp/tmp.OMdrceATcB
+Checking piggy obj.. /tmp/tmp.EXwxa9WNVZ
+.section .romfs, "w", %progbits
+__romfs_Base:
+.long 3
+# [File #0] 'einit', path: '/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/EinitQemu'
+.long __file0_Name - __romfs_Base
+.long __file0_DataBegin - __romfs_Base
+.long __file0_DataEnd - __file0_DataBegin
+# [File #1] 'Hello', path: '/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/hello/Hello'
+.long __file1_Name - __romfs_Base
+.long __file1_DataBegin - __romfs_Base
+.long __file1_DataEnd - __file1_DataBegin
+# [File #2] 'ksm.module', path: '/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/EinitQemu-kss/ksm.module'
+.long __file2_Name - __romfs_Base
+.long __file2_DataBegin - __romfs_Base
+.long __file2_DataEnd - __file2_DataBegin
+__file0_Name:
+.asciz "einit"
+__file1_Name:
+.asciz "Hello"
+__file2_Name:
+.asciz "ksm.module"
+.p2align 12
+__file0_DataBegin:
+.incbin "/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/EinitQemu"
+__file0_DataEnd:
+.p2align 12
+__file1_DataBegin:
+.incbin "/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/hello/Hello"
+__file1_DataEnd:
+.p2align 12
+__file2_DataBegin:
+.incbin "/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/EinitQemu-kss/ksm.module"
+__file2_DataEnd:
+.p2align 12
+Assembling piggy file:  ... /opt/KasperskyOS-Community-Edition-1.0.1.4/toolchain/bin/arm-kos-gcc  -x assembler -c  -o /tmp/tmp.EXwxa9WNVZ /tmp/tmp.OMdrceATcB
+ok /tmp/tmp.EXwxa9WNVZ
+Generating romfs file...
+Linking image: /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/kos-qemu-image ... /opt/KasperskyOS-Community-Edition-1.0.1.4/toolchain/bin/arm-kos-gcc -nostdlib  -o /opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/kos-qemu-image -T /opt/KasperskyOS-Community-Edition-1.0.1.4/sysroot-arm-kos/../libexec/arm-kos/kos-qemu.ld -Wl,-Map=/opt/KasperskyOS-Community-Edition-1.0.1.4/examples/hello/build/einit/kos-qemu-image.map /opt/KasperskyOS-Community-Edition-1.0.1.4/sysroot-arm-kos/../libexec/arm-kos/kos-qemu /tmp/tmp.EXwxa9WNVZ -lgcc
+ok
+Generating debug symbols file...
+Generating binary image...
+/opt/KasperskyOS-Community-Edition-1.0.1.4/toolchain/bin/makeimg: line 185: dtc: command not found
+Generating stripped image...
+[100%] Running QEMU with KasperskyOS image...
+[BOOT] Starting...
+[BOOT] Setting up arch flags...
+[BOOT] Preparing memory...
+[BOOT] Preparing loader info...
+[BOOT] Preparing ROMFS...
+[BOOT] Preparing KasperskyOS kernel...
+[BOOT] Preparing trampoline to kernel...
+[BOOT] Preparing page table...
+[BOOT] Preparing modules...
+[BOOT] Freeing loader memory...
+[BOOT] Dump physical memory map
+[BOOT] Starting KasperskyOS...
+
+Loading:
+ _  __                             _           ___  ____
+| |/ /__ _ ___ _ __   ___ _ __ ___| | ___   _ / _ \/ ___|
+| ' // _` / __| '_ \ / _ \ '__/ __| |/ / | | | | | \___ \
+| . \ (_| \__ \ |_) |  __/ |  \__ \   <| |_| | |_| |___) |
+|_|\_\__,_|___/ .__/ \___|_|  |___/_|\_\\__, |\___/|____/
+              |_|                       |___/
+
+
+Built on:   Feb 17 2022 14:13:19
+Board:      vexpress_qemu
+SoC:        v2pca15
+ARCH:       arm
+Git hash:   c2b7dbecfee67a3f259f6aa8a1d9f5ddd935251c-dirty
+
+
+Found CPU: ARMv7
+	Instruction set: ARM Thumb-2 ThumbEE Jazzele 
+	Extensions: GenericTimer Virtualizaton Security PXN 
+	Support standard programmers' model
+System control register:
+	L1 instruction cache: enabled
+	L1 data cache: enabled
+[HAL ] Internal PFN-allocator initiated.
+[HAL ] Private Area begin       : 0x00001000
+[HAL ] Private Area end         : 0x7f7fffff
+[HAL ] Private Area size        : 0x7f7ff000
+[HAL ] Shared Area begin        : 0x81400000
+[HAL ] Shared Area end          : 0xffffffff
+[HAL ] Shared Area size         : 0x7ec00000
+[HAL ] PTE Table Area begin     : 0x80000000
+[HAL ] PTE Table Area end       : 0x803fffff
+[HAL ] PTE Table Area size      : 0x00400000
+[HAL ] Kernel Area begin        : 0x81400000
+[HAL ] Kernel Area end          : 0xfcffffff
+[HAL ] Kernel Area size         : 0x7bc00000
+[HAL ] Internal Area begin      : 0xff400000
+[HAL ] Internal Area end        : 0xffffffff
+[HAL ] Internal Area size       : 0x00c00000
+[HAL ] Temporary Area begin     : 0xff400000
+[HAL ] Temporary Area end       : 0xff486fff
+[HAL ] Temporary Area size      : 0x00087000
+[HAL ] Periphery Area begin     : 0xff800000
+[HAL ] Periphery Area end       : 0xfffeffff
+[HAL ] Periphery Area size      : 0x007f0000
+[HAL ] Temporary area mapped.
+[HAL ] SoC area mapped. begin: 0xff800000, size: 0x00007000
+[HAL ] MMU initialized.
+[HAL ] WXN protection enabled.
+[HAL ] Zero space initialized.
+[HAL ] Found GICv1 with 160 interrupts.
+[HAL ] Interrupts initiated.
+[HAL ] Generic Timer found.
+[HAL ] cpu #0 - 3869MHz
+[HAL ] Cpu initialized.
+[HAL ] Bootstrap Processor's ID - 0
+CPU0 - boot strap processor
+[HAL ] Hardware Abstraction Layer successfully initialized.
+[INIT] Starting core...
+[MM  ] Max pfns                 : 0x00100000
+[MM  ] Max kernel VAD           : 0x40000000
+[MM  ] Max user VAD             : 0x80000000
+[MM  ] Max buddy order          : 0x00000010
+[MM  ] PageInfo size            : 0x00000020
+[MM  ] Pfn DB begin             : 0xc5000000
+[MM  ] Pfn DB end               : 0xc8ffffff
+[MM  ] Pfn DB size              : 0x04000000
+[MM  ] Buddy begin              : 0xc9000000
+[MM  ] Buddy end                : 0xccffffff
+[MM  ] Buddy size               : 0x04000000
+[MM  ] Kernel VAD begin         : 0x81400000
+[MM  ] Kernel VAD end           : 0xfcffffff
+[MM  ] Kernel VAD size          : 0x7bc00000
+[MM  ] Ipc area begin           : 0xf8ff0000
+[MM  ] Ipc area end             : 0xfcfeffff
+[MM  ] Ipc area size            : 0x04000000
+[MM  ] User VAD begin           : 0x00001000
+[MM  ] User VAD end             : 0x7f7fffff
+[MM  ] User VAD size            : 0x7f7ff000
+[MM  ] PFN range #01[__x] begin : 0x00080000
+[MM  ] PFN range #01[__x] end   : 0x0008002a
+[MM  ] PFN range #01[__x] size  : 0x0000002b
+[MM  ] PFN range #02[___] begin : 0x0008002b
+[MM  ] PFN range #02[___] end   : 0x0008002b
+[MM  ] PFN range #02[___] size  : 0x00000001
+[MM  ] PFN range #03[r__] begin : 0x0008002c
+[MM  ] PFN range #03[r__] end   : 0x0008002f
+[MM  ] PFN range #03[r__] size  : 0x00000004
+[MM  ] PFN range #04[rw_] begin : 0x00080030
+[MM  ] PFN range #04[rw_] end   : 0x00080067
+[MM  ] PFN range #04[rw_] size  : 0x00000038
+[MM  ] PFN range #05[rw_] begin : 0x00080068
+[MM  ] PFN range #05[rw_] end   : 0x0008006e
+[MM  ] PFN range #05[rw_] size  : 0x00000007
+[MM  ] PFN range #06[rwx] begin : 0x0008006f
+[MM  ] PFN range #06[rwx] end   : 0x00080073
+[MM  ] PFN range #06[rwx] size  : 0x00000005
+[MM  ] PFN range #07[rwx] begin : 0x00080074
+[MM  ] PFN range #07[rwx] end   : 0x00082007
+[MM  ] PFN range #07[rwx] size  : 0x00001f94
+[MM  ] PFN range #08[__x] begin : 0x00082008
+[MM  ] PFN range #08[__x] end   : 0x00082008
+[MM  ] PFN range #08[__x] size  : 0x00000001
+[MM  ] PFN range #09[rw_] begin : 0x00082009
+[MM  ] PFN range #09[rw_] end   : 0x00082009
+[MM  ] PFN range #09[rw_] size  : 0x00000001
+[MM  ] PFN range #10[rwx] begin : 0x0008200a
+[MM  ] PFN range #10[rwx] end   : 0x00082046
+[MM  ] PFN range #10[rwx] size  : 0x0000003d
+[MM  ] PFN range #11[rwx] begin : 0x00082047
+[MM  ] PFN range #11[rwx] end   : 0x000821a6
+[MM  ] PFN range #11[rwx] size  : 0x00000160
+[MM  ] PFN range #12[rwx] begin : 0x000821a7
+[MM  ] PFN range #12[rwx] end   : 0x000821a7
+[MM  ] PFN range #12[rwx] size  : 0x00000001
+[MM  ] PFN range #13[rw_] begin : 0x000821a8
+[MM  ] PFN range #13[rw_] end   : 0x000821a8
+[MM  ] PFN range #13[rw_] size  : 0x00000001
+[MM  ] PFN range #14[rwx] begin : 0x000821a9
+[MM  ] PFN range #14[rwx] end   : 0x000dffff
+[MM  ] PFN range #14[rwx] size  : 0x0005de57
+[MM  ] Main range mapped begin  : 0xc6000000
+[MM  ] Main range mapped end    : 0xc6bfffff
+[MM  ] Main range mapped size   : 0x00c00000
+[MM  ] PFN database created.
+[MM  ] Buddy subsystem initialized.
+[MM  ] Add low PFN range begin  : 0x80c77000
+[MM  ] Add low PFN range end    : 0x82007fff
+[MM  ] Add low PFN range size   : 0x01391000
+[MM  ] Add low PFN range begin  : 0x8200a000
+[MM  ] Add low PFN range end    : 0x82046fff
+[MM  ] Add low PFN range size   : 0x0003d000
+[MM  ] Add low PFN range begin  : 0x821a7000
+[MM  ] Add low PFN range end    : 0x821a7fff
+[MM  ] Add low PFN range size   : 0x00001000
+[MM  ] Add low PFN range begin  : 0x821a9000
+[MM  ] Add low PFN range end    : 0xdfffffff
+[MM  ] Add low PFN range size   : 0x5de57000
+[MM  ] Atomic buddy object created (64 MB).
+[MM  ] Internal HAL allocator changed.
+[MM  ] Atomic mapping created.
+[MM  ] Slab subsystem initialized.
+[MM  ] Anonymous slab-caches created.
+[MM  ] kmalloc/kfree initialized.
+[MM  ] Memory Manager successfully initialized.
+[VMM ] #PF handler was installed.
+[SMP ] UP mode.
+[UID ] Uid allocator initialized.
+[SID ] Sid allocator initialized.
+[IO  ] Initialize MMIO subsystem.
+[IO  ] Initialize DMA subsystem.
+[IO  ] Hardware interrupts successfully initialized.
+[IO  ] Resources registry initialized.
+[VMM ] System address space initialized.
+[VMM ] Internal VMM areas initialized.
+[IPC ] IPC transfer area initialized.
+[TASK] Task infrastructure initialized.
+[SMP ] Idle thread for CPU #0 created.
+[TASK] Scheduler interrupts initialized.
+[TASK] GSI page initialized.
+[PROF] Profiler initialized.
+[TASK] Multitasking infrastructure initialized.
+[TIME] Time infrastructure initialized.
+[ROFS] Files: 3, size: 1441792 (0x00160000).
+[ROFS] File #00: einit            - size:   611264 (0x000953c0)
+[ROFS] File #01: Hello            - size:   607312 (0x00094450)
+[ROFS] File #02: ksm.module       - size:   211668 (0x00033ad4)
+[AU..] Starting core audit...
+[VLOG] Virtual logging subsystem initialized.
+[VMM ] Virtual Memory Manager service initialized.
+[IO  ] I/O subsystem successfully initialized.
+[FS  ] File System Manager successfully initialized.
+[XHCI] XHCIDBG service initialized.
+[CM  ] Connection Manager successfully initialized.
+[KSM ] Module: 'ksm.module' loaded.
+[KSM ] Audit log created.
+[KSM ] Module: 'ksm.module' initialized.
+[KSM ] Server: 'kl.core.Core' executed.
+[KSM ] Security system successfully initialized.
+[INIT] Starting 'Einit' ...
+[INIT] Starting system worker.
+Hello from KasperskyOS!
+[INIT] System worker finished
+[INIT] System halted...
