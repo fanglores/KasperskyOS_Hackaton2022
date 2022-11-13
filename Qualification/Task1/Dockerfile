@@ -3,6 +3,7 @@ LABEL maintainer="user"
 
 # KasperskyOS distributive name
 ARG KOS_deb="KasperskyOS-Community-Edition_1.1.0.356_amd64.deb"
+ARG Container_Name="docker-KOSmqtt"
 
 RUN apt-get update && apt-get -y install \
        sudo systemd systemd-sysv \
@@ -18,16 +19,18 @@ RUN apt-get update && apt-get -y install \
        qemu-system-arm \
        curl wget git nano \
        vim cmake-curses-gui gdebi-core\
+       mosquitto\
+       mosquitto-clients\
        && apt-get autoremove --yes && apt-get clean --yes
 
 COPY ./$KOS_deb /tmp/$KOS_deb
 RUN gdebi  /tmp/$KOS_deb --n
 
 # add user 'docker'
-RUN useradd -r -u 1000 -U -m docker-KOS
+RUN useradd -r -u 1000 -U -m $Container_Name
 
 # prepare working directory
-RUN mkdir /workspace && chown -R docker-KOS /workspace
+RUN mkdir /workspace && chown -R $Container_Name /workspace
 WORKDIR /workspace
 
 ENV LC_ALL C.UTF-8
