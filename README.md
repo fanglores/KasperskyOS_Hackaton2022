@@ -5,7 +5,7 @@ Repository for KasperskyOS hackaton by Kaspersky Laboratory based at MAI univers
 To be added
 
 ### Current jobs
- - [ ] Edit license for hackaton
+ - [x] Edit license for hackaton
  - [x] Qualification Task 1
  - [x] Qualification Task 2
  - [x] Qualification Task 3
