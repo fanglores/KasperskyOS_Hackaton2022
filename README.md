@@ -7,8 +7,8 @@ To be added
 ### Current jobs
  - [ ] Edit license for hackaton
  - [x] Qualification Task 1
- - [ ] Qualification Task 2
- - [ ] Qualification Task 3
+ - [x] Qualification Task 2
+ - [x] Qualification Task 3
  - [ ] Qualification Task 4
  - [ ] To be added
 
