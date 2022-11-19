@@ -40,18 +40,18 @@ void run_command(const std::string& json_string)
         std::cout << "No command type!" << std::endl;
         return;
     }
-    
-    switch (cmd_type)
+
+    switch (COMMAND_MAPPING.at(cmd_type))
     {
-        case "stop":
+        case COMMAND::STOP:
         {
             // send command to gpio
         }
     
-        case "forward":
-        case "back":
-        case "left":
-        case "right":
+        case COMMAND::FORWARD:
+        case COMMAND::BACK:
+        case COMMAND::RIGHT:
+        case COMMAND::LEFT:
         {
             std::string cmd_arg = j.value("val", "");
             if(cmd_arg.empty())

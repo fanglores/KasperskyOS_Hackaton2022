@@ -9,6 +9,27 @@
 #include <string>
 #include "json.hpp"
 #include <assert.h>
+#include <map>
+
+const uint16_t MQTT_MASK = 0xF;
+
+enum COMMAND : uint16_t
+{
+    STOP = 0x0,
+    FORWARD = 0x1,
+    BACK = 0x2,
+    LEFT = 0x3,
+    RIGHT = 0x4
+};
+
+const std::map <std::string, uint16_t> COMMAND_MAPPING
+{
+    {"stop",    COMMAND::STOP},
+    {"forward", COMMAND::FORWARD},
+    {"back",    COMMAND::BACK},
+    {"left",    COMMAND::LEFT},
+    {"right",   COMMAND::RIGHT}
+};
 
 void run_command(const std::string& json_string);
 
