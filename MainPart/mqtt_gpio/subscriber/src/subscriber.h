@@ -31,6 +31,20 @@ const std::map <std::string, uint16_t> COMMAND_MAPPING
     {"right",   COMMAND::RIGHT}
 };
 
+struct JSON_command
+{
+    std::string cmd_type;
+    std::string cmd_arg;
+};
+
+struct GPIO_command
+{
+    uint16_t cmd_type;
+    uint16_t cmd_arg;
+    
+    //GPIO_command(const JSON_command& jc);
+};
+
 void run_command(const std::string& json_string);
 
 class Subscriber : public mosqpp::mosquittopp

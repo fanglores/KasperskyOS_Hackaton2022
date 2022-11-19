@@ -15,14 +15,14 @@ Subscriber::Subscriber(const char *id, const char *host, int port)
               << host << " and port " << port << std::endl;
 
     const int keepAlive = 60;
-
+    
+    this->username_pw_set("kokos", "testpswd");
     connect(host, port, keepAlive);
 }
 
 void Subscriber::on_connect(int rc)
 {
-    std::cout << app::AppTag << "Subscriber connected with code "
-              << rc << std::endl;
+    std::cout << app::AppTag << "Subscriber connected with code " << rc << std::endl;
 
     if (rc == 0)
     {
@@ -40,8 +40,9 @@ void run_command(const std::string& json_string)
         std::cout << "No command type!" << std::endl;
         return;
     }
-
-    switch (COMMAND_MAPPING.at(cmd_type))
+    
+    uint16_t cmd_op = COMMAND_MAPPING.at(cmd_type);
+    switch (cmd_op)
     {
         case COMMAND::STOP:
         {
@@ -59,7 +60,8 @@ void run_command(const std::string& json_string)
                 std::cout << "No command argument!" << std::endl;
                 return;
             }
-            // send command to gpio
+            //uint16_t cmd_arg
+            // send (cmd_op) command to gpio
         }
     }
 }

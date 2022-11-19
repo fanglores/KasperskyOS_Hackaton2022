@@ -58,15 +58,13 @@ int main(void)
 {
     if (!wait_for_network())
     {
-        std::cerr << app::AppTag << "Error: Wait for network failed!"
-                  << std::endl;
+        std::cerr << app::AppTag << "Error: Wait for network failed!" << std::endl;
         return EXIT_FAILURE;
     }
 
     mosqpp::lib_init();
 
-    auto sub = std::make_unique<Subscriber>(
-        "subscriber", GetBrokerAddress().c_str(), GetBrokerPort());
+    auto sub = std::make_unique<Subscriber>("subscriber", GetBrokerAddress().c_str(), GetBrokerPort());
     if (sub)
     {
         sub->loop_forever();
