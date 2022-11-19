@@ -62,6 +62,8 @@ int GPIOController::run(uint16_t command)
     uint16_t op = command & MQTT_MASK;
     uint16_t arg = static_cast<uint16_t>(command >> 4);
     
+    fprintf(stderr, "Robot command: %d with %d\n", op, arg);
+    
     switch(op)
     {
         case COMMAND::FORWARD:
@@ -79,6 +81,7 @@ int GPIOController::run(uint16_t command)
 
 int GPIOController::forward(uint16_t time)
 {
+    fprintf(stderr, "Robot forward\n");
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 1);
@@ -93,6 +96,7 @@ int GPIOController::forward(uint16_t time)
 
 int GPIOController::back(uint16_t time)
 {
+    fprintf(stderr, "Robot back\n");
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 0);
@@ -107,6 +111,7 @@ int GPIOController::back(uint16_t time)
 
 int GPIOController::right(uint16_t time)
 {
+    fprintf(stderr, "Robot right\n");
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 0);
@@ -121,6 +126,7 @@ int GPIOController::right(uint16_t time)
 
 int GPIOController::left(uint16_t time)
 {
+    fprintf(stderr, "Robot left\n");
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 1);
@@ -135,6 +141,7 @@ int GPIOController::left(uint16_t time)
 
 int GPIOController::stop()
 {
+    fprintf(stderr, "Robot stop\n");
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 0);

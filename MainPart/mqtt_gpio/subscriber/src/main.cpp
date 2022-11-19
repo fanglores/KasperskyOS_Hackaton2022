@@ -56,6 +56,19 @@ static int GetBrokerPort()
 
 int main(void)
 {
+    bool f;
+    GPIOController* gpioctrl = new GPIOController(f);
+    uint16_t cmd1 = static_cast<uint16_t>(COMMAND::FORWARD | (1 << 4));
+    gpioctrl->run(cmd1);
+    uint16_t cmd2 = static_cast<uint16_t>(COMMAND::BACK | (2 << 4));
+    gpioctrl->run(cmd2);
+    uint16_t cmd3 = static_cast<uint16_t>(COMMAND::LEFT | (1 << 4));
+    gpioctrl->run(cmd3);
+    uint16_t cmd4 = static_cast<uint16_t>(COMMAND::RIGHT | (2 << 4));
+    gpioctrl->run(cmd4);
+    
+    return EXIT_SUCCESS;
+
     if (!wait_for_network())
     {
         std::cerr << app::AppTag << "Error: Wait for network failed!" << std::endl;
