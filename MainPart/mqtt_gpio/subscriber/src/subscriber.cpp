@@ -8,11 +8,16 @@ using namespace std::literals;
 
 constexpr auto Topic = "my/awesome/topic"sv;
 
-Subscriber::Subscriber(const char *id, const char *host, int port)
+Subscriber::Subscriber(const char *id, const char *host, int port, bool& flag)
     : mosquittopp(id)
 {
-    gpioctrl = new GPIOController();
-
+    gpioctrl = new GPIOController(flag);
+    if (flag)
+    {
+        delete gpioctrl;
+        return;
+    }
+    
     std::cout << app::AppTag << "Connecting to MQTT Broker with address "
               << host << " and port " << port << std::endl;
 
@@ -75,7 +80,7 @@ void Subscriber::run_command(const std::string& json_string)
             return;
     }
     
-    gpioctrl->run(jc.to_gpio());
+    if(!gpioctrl->run(jc.to_gpio())) std::cout << "Error while executing command on GPIO!";
 }
 
 void Subscriber::on_message(const struct mosquitto_message *message)

@@ -63,8 +63,16 @@ int main(void)
     }
 
     mosqpp::lib_init();
-
-    auto sub = std::make_unique<Subscriber>("subscriber", GetBrokerAddress().c_str(), GetBrokerPort());
+    
+    bool flag = false;
+    auto sub = std::make_unique<Subscriber>("subscriber", GetBrokerAddress().c_str(), GetBrokerPort(), flag);
+    
+    if(flag)
+    {
+        mosqpp::lib_cleanup();
+        return EXIT_FAILURE;
+    }
+    
     if (sub)
     {
         sub->loop_forever();

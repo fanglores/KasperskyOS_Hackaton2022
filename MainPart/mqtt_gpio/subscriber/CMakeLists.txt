@@ -13,12 +13,9 @@ add_dependencies (Subscriber subscriber_edl_files)
 target_link_libraries(Subscriber 
                       ${mosquitto_CXX_LIB}
                       ${vfs_CLIENT_LIB}
+                      ${bsp_CLIENT_LIB}
                       ${gpio_CLIENT_LIB}
 )
-
-if ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "arm|aarch64")
-    target_link_libraries (Subscriber ${bsp_CLIENT_LIB})
-endif ()
 
 # We do not need the default VFS entity which comes from ${vfs_CLIENT_LIB}.
 set_target_properties (Subscriber PROPERTIES ${vfs_ENTITY}_REPLACEMENT "")

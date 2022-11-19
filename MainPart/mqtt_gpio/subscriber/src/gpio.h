@@ -13,8 +13,6 @@
 #define DELAY_S         2
 #define HW_MODULE_NAME  "gpio0"
 #define HW_MODULE_CFG   "raspberry_pi4b.default"
-#define GPIO_HIGH 1
-#define GPIO_LOW  0
 
 #define GPIO_PIN_UART_TX 14
 #define GPIO_PIN_UART_RX 15
@@ -31,13 +29,13 @@ class GPIOController
 private:
     GpioHandle handle;
     
-    int forward(int time);
-    int back(int time);
-    int right(int time);
-    int left(int time);
+    int forward(uint16_t time);
+    int back(uint16_t time);
+    int right(uint16_t time);
+    int left(uint16_t time);
     int stop();
 public:
-    GPIOController();
+    GPIOController(bool& flag);
     int run(uint16_t command);
     ~GPIOController();
 };

@@ -41,7 +41,7 @@ class Subscriber : public mosqpp::mosquittopp
 private:
     GPIOController* gpioctrl;
 public:
-    Subscriber(const char *id, const char *host, int port);
+    Subscriber(const char *id, const char *host, int port, bool& flag);
     ~Subscriber() {};
 
     void on_connect(int rc) override;
