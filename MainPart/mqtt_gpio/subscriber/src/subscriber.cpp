@@ -11,6 +11,8 @@ constexpr auto Topic = "my/awesome/topic"sv;
 Subscriber::Subscriber(const char *id, const char *host, int port)
     : mosquittopp(id)
 {
+    gpioctrl = new GPIOController();
+
     std::cout << app::AppTag << "Connecting to MQTT Broker with address "
               << host << " and port " << port << std::endl;
 
@@ -30,7 +32,7 @@ void Subscriber::on_connect(int rc)
     }
 }
 
-void run_command(const std::string& json_string)
+void Subscriber::run_command(const std::string& json_string)
 {
     nlohmann::json j = nlohmann::json::parse(json_string);
     
@@ -42,11 +44,14 @@ void run_command(const std::string& json_string)
     }
     
     uint16_t cmd_op = COMMAND_MAPPING.at(cmd_type);
+    JSON_command jc;
+    
     switch (cmd_op)
     {
         case COMMAND::STOP:
         {
-            // send command to gpio
+            jc.type = cmd_op;
+            break;
         }
     
         case COMMAND::FORWARD:
@@ -60,10 +65,17 @@ void run_command(const std::string& json_string)
                 std::cout << "No command argument!" << std::endl;
                 return;
             }
-            //uint16_t cmd_arg
-            // send (cmd_op) command to gpio
+            jc.type = cmd_op;
+            jc.arg = static_cast<uint16_t>(stod(cmd_arg)*100);
+            break;
         }
+        
+        default:
+            std::cout << "Unknown command!" << std::endl;
+            return;
     }
+    
+    gpioctrl->run(jc.to_gpio());
 }
 
 void Subscriber::on_message(const struct mosquitto_message *message)

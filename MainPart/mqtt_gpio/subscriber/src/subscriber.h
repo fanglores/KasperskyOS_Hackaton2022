@@ -1,4 +1,3 @@
-/* © 2021 AO Kaspersky Lab */
 #ifndef _MOSQUITTO_SUBSCRIBER_H
 #define _MOSQUITTO_SUBSCRIBER_H
 
@@ -6,21 +5,13 @@
 
 #include <mosquittopp.h>
 #include <rtl/compiler.h>
+#include <iostream>
 #include <string>
 #include "json.hpp"
 #include <assert.h>
 #include <map>
-
-const uint16_t MQTT_MASK = 0xF;
-
-enum COMMAND : uint16_t
-{
-    STOP = 0x0,
-    FORWARD = 0x1,
-    BACK = 0x2,
-    LEFT = 0x3,
-    RIGHT = 0x4
-};
+#include "gpio.h"
+#include "common.h"
 
 const std::map <std::string, uint16_t> COMMAND_MAPPING
 {
@@ -33,22 +24,22 @@ const std::map <std::string, uint16_t> COMMAND_MAPPING
 
 struct JSON_command
 {
-    std::string cmd_type;
-    std::string cmd_arg;
-};
-
-struct GPIO_command
-{
-    uint16_t cmd_type;
-    uint16_t cmd_arg;
+    uint16_t type;
+    uint16_t arg;
     
-    //GPIO_command(const JSON_command& jc);
+    uint16_t to_gpio()
+    {   
+        if (arg >= 1<<13) std::cout << "Warning! Argument part has been lost!" << std::endl;
+        return static_cast<uint16_t>(type | (arg << 4));
+    }
 };
 
 void run_command(const std::string& json_string);
 
 class Subscriber : public mosqpp::mosquittopp
 {
+private:
+    GPIOController* gpioctrl;
 public:
     Subscriber(const char *id, const char *host, int port);
     ~Subscriber() {};
@@ -58,6 +49,8 @@ public:
     void on_subscribe(__rtl_unused int        mid,
                       __rtl_unused int        qos_count,
                       __rtl_unused const int *granted_qos) override;
+
+    void run_command(const std::string& json_str);
 };
 
 #endif // _MOSQUITTO_SUBSCRIBER_H
