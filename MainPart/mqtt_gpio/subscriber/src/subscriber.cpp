@@ -32,7 +32,12 @@ void Subscriber::on_connect(int rc)
 
 void run_command(const std::string& json_string)
 {
-
+    nlohmann::json j = nlohmann::json::parse(json_string);
+    
+    std::string cmd_type = j.value("cmd", "NULL");
+    auto cmd_arg = j.value("val", "NULL");
+    
+    std::cout << "Command type: " << cmd_type << "; Command argument: " << cmd_arg << std::endl;
 }
 
 void Subscriber::on_message(const struct mosquitto_message *message)
