@@ -54,7 +54,7 @@ static int GetBrokerPort()
     }
 }
 
-int main(void)
+void gpio_test()
 {
     bool f;
     GPIOController* gpioctrl = new GPIOController(f);
@@ -70,8 +70,11 @@ int main(void)
     uint16_t cmd4 = static_cast<uint16_t>(COMMAND::RIGHT | (2 << 4));
     gpioctrl->run(cmd4);
     
-    return EXIT_SUCCESS;
+    exit(0);
+}
 
+int main(void)
+{
     if (!wait_for_network())
     {
         std::cerr << app::AppTag << "Error: Wait for network failed!" << std::endl;
@@ -91,6 +94,7 @@ int main(void)
     
     if (sub)
     {
+        sub->get_gpio()->run(static_cast<uint16_t>(COMMAND::FORWARD | (50 << 4)));
         sub->loop_forever();
     }
 

@@ -29,10 +29,10 @@ class GPIOController
 private:
     GpioHandle handle;
     
-    int forward(uint16_t time);
-    int back(uint16_t time);
-    int right(uint16_t time);
-    int left(uint16_t time);
+    int forward(unsigned int time);
+    int back(unsigned int time);
+    int right(unsigned int time);
+    int left(unsigned int time);
     int stop();
 public:
     GPIOController(bool& flag);

@@ -6,11 +6,25 @@
 
 using namespace std::literals;
 
-constexpr auto Topic = "my/awesome/topic"sv;
+constexpr auto Topic = "my/awesome/kokosmasters"sv;
 
 Subscriber::Subscriber(const char *id, const char *host, int port, bool& flag)
     : mosquittopp(id)
 {
+    std::cout << app::AppTag << "Connecting to MQTT Broker with address "
+              << host << " and port " << port << std::endl;
+
+    const int keepAlive = 60;
+    
+    //this->username_pw_set("kokos", "testpswd");
+    int rc = connect(host, port, keepAlive)
+    if(0 != rc)
+    {
+        std::cout << app::AppTag << "Connect ended with code: " << rc << std::endl;
+        flag = true;
+        return;
+    }
+    
     gpioctrl = new GPIOController(flag);
     if (flag)
     {
@@ -18,13 +32,11 @@ Subscriber::Subscriber(const char *id, const char *host, int port, bool& flag)
         return;
     }
     
-    std::cout << app::AppTag << "Connecting to MQTT Broker with address "
-              << host << " and port " << port << std::endl;
+}
 
-    const int keepAlive = 60;
-    
-    this->username_pw_set("kokos", "testpswd");
-    connect(host, port, keepAlive);
+GPIOController* Subscriber::get_gpio()
+{
+    return gpioctrl;
 }
 
 void Subscriber::on_connect(int rc)

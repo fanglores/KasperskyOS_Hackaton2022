@@ -51,6 +51,7 @@ public:
                       __rtl_unused const int *granted_qos) override;
 
     void run_command(const std::string& json_str);
+    GPIOController* get_gpio();
 };
 
 #endif // _MOSQUITTO_SUBSCRIBER_H
