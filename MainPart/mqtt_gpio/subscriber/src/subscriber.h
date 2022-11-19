@@ -8,6 +8,7 @@
 #include <rtl/compiler.h>
 #include <string>
 #include "json.hpp"
+#include <assert.h>
 
 void run_command(const std::string& json_string);
 

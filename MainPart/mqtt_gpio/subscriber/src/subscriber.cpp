@@ -34,10 +34,34 @@ void run_command(const std::string& json_string)
 {
     nlohmann::json j = nlohmann::json::parse(json_string);
     
-    std::string cmd_type = j.value("cmd", "NULL");
-    auto cmd_arg = j.value("val", "NULL");
+    std::string cmd_type = j.value("cmd", "");
+    if(cmd_type.empty())
+    {
+        std::cout << "No command type!" << std::endl;
+        return;
+    }
     
-    std::cout << "Command type: " << cmd_type << "; Command argument: " << cmd_arg << std::endl;
+    switch (cmd_type)
+    {
+        case "stop":
+        {
+            // send command to gpio
+        }
+    
+        case "forward":
+        case "back":
+        case "left":
+        case "right":
+        {
+            std::string cmd_arg = j.value("val", "");
+            if(cmd_arg.empty())
+            {
+                std::cout << "No command argument!" << std::endl;
+                return;
+            }
+            // send command to gpio
+        }
+    }
 }
 
 void Subscriber::on_message(const struct mosquitto_message *message)
