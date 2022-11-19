@@ -60,10 +60,13 @@ int main(void)
     GPIOController* gpioctrl = new GPIOController(f);
     uint16_t cmd1 = static_cast<uint16_t>(COMMAND::FORWARD | (1 << 4));
     gpioctrl->run(cmd1);
+    sleep(1);
     uint16_t cmd2 = static_cast<uint16_t>(COMMAND::BACK | (2 << 4));
     gpioctrl->run(cmd2);
+    sleep(1);
     uint16_t cmd3 = static_cast<uint16_t>(COMMAND::LEFT | (1 << 4));
     gpioctrl->run(cmd3);
+    sleep(1);
     uint16_t cmd4 = static_cast<uint16_t>(COMMAND::RIGHT | (2 << 4));
     gpioctrl->run(cmd4);
     

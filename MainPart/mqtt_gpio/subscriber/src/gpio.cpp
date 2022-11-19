@@ -85,9 +85,9 @@ int GPIOController::forward(uint16_t time)
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 1);
-    rc |= GpioOut(handle, 21, 1);
     rc |= GpioOut(handle, 13, 0);
-    rc |= GpioOut(handle, 20, 0);
+    rc |= GpioOut(handle, 20, 1);
+    rc |= GpioOut(handle, 21, 0);
     
     sleep(time);
     rc |= stop();
@@ -100,9 +100,9 @@ int GPIOController::back(uint16_t time)
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 0);
-    rc |= GpioOut(handle, 21, 0);
     rc |= GpioOut(handle, 13, 1);
-    rc |= GpioOut(handle, 20, 1);
+    rc |= GpioOut(handle, 20, 0);
+    rc |= GpioOut(handle, 21, 1);
     
     sleep(time);
     rc |= stop();
@@ -114,10 +114,10 @@ int GPIOController::right(uint16_t time)
     fprintf(stderr, "Robot right\n");
     Retcode rc = rcOk;
     
-    rc |= GpioOut(handle, 12, 0);
-    rc |= GpioOut(handle, 21, 1);
+    rc |= GpioOut(handle, 12, 1);
     rc |= GpioOut(handle, 13, 0);
     rc |= GpioOut(handle, 20, 0);
+    rc |= GpioOut(handle, 21, 0);
     
     sleep(time);
     rc |= stop();
@@ -130,9 +130,9 @@ int GPIOController::left(uint16_t time)
     Retcode rc = rcOk;
     
     rc |= GpioOut(handle, 12, 1);
-    rc |= GpioOut(handle, 21, 0);
     rc |= GpioOut(handle, 13, 0);
     rc |= GpioOut(handle, 20, 0);
+    rc |= GpioOut(handle, 21, 0);
     
     sleep(time);
     rc |= stop();
