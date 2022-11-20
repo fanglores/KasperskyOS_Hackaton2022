@@ -1,207 +1,184 @@
-#include "gpio.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <gpio/gpio.h>
+#include <stdbool.h>
+#include <string>
+#include <iostream>
+#include "json.hpp"
 
-GPIOController::GPIOController(bool& flag)
+#ifdef __arm__
+#include <bsp/bsp.h>
+#endif
+
+#define GPIO_PIN_NUM_IN2 12U
+#define GPIO_PIN_NUM_IN1 13U
+#define GPIO_PIN_NUM_ENA 6U
+#define GPIO_PIN_NUM_IN4 20U
+#define GPIO_PIN_NUM_IN3 21U
+#define GPIO_PIN_NUM_ENB 26U
+#define DELAY_S 2
+
+#define BUF_SIZE 1024
+#define HIGH 1
+#define LOW 0
+
+void forward(GpioHandle* handle){
+    fprintf(stderr, "forward\n");
+    GpioOut(*handle, GPIO_PIN_NUM_IN1, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_IN2, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN3, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN4, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_ENA, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_ENB, HIGH);
+}
+
+void stop(GpioHandle* handle) {
+    GpioOut(*handle, GPIO_PIN_NUM_IN1, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN2, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN3, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN4, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_ENA, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_ENB, LOW);
+}
+
+void backward(GpioHandle* handle) {
+    fprintf(stderr, "backward\n");
+    GpioOut(*handle, GPIO_PIN_NUM_IN1, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN2, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_IN3, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_IN4, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_ENA, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_ENB, HIGH);
+}
+
+void left(GpioHandle* handle) {
+    fprintf(stderr, "left\n");
+    GpioOut(*handle, GPIO_PIN_NUM_IN1, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_IN2, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN3, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_IN4, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_ENA, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_ENB, HIGH);
+}
+
+void right(GpioHandle* handle) {
+    fprintf(stderr, "right\n");
+    GpioOut(*handle, GPIO_PIN_NUM_IN1, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN2, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_IN3, LOW);
+    GpioOut(*handle, GPIO_PIN_NUM_IN4, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_ENA, HIGH);
+    GpioOut(*handle, GPIO_PIN_NUM_ENB, HIGH);
+}
+
+int gpiomain(const std::string& cmd)
 {
-    Retcode rc = BspInit(NULL);
-    if (BSP_EOK != rc)
-    {
-        fprintf(stderr, "Failed to initialize BSP, error code: %d.\n", RC_GET_CODE(rc));
-        flag = true;
-        return;
-    }
-    
-    rc = BspSetConfig(HW_MODULE_NAME, HW_MODULE_CFG);
-    if (rcOk != rc)
-    {
-        fprintf(stderr, "Failed to set mux configuration for %s module, error code: %d.\n", HW_MODULE_NAME, RC_GET_CODE(rc));
-        flag = true;
-        return;
-    }
-    
-    rc = GpioInit();
-    if (rcOk != rc)
-    {
-        fprintf(stderr, "GpioInit failed, error code: %d.\n", RC_GET_CODE(rc));
-        flag = true;
-        return;
-    }
+    fprintf(stderr, "Start GPIO_output test\n");
 
-    rc = GpioOpenPort(HW_MODULE_NAME, &handle);
-    if (rcOk != rc)
+#ifdef __arm__
+    /**
+     * InitializeGPIO_PIN_NUM board support package (BSP) driver and set configuration
+     * for GPIO pins. It`s required for stdout by UART.
+     */
     {
-        fprintf(stderr, "GpioOpenPort port %s failed, error code: %d.\n", HW_MODULE_NAME, RC_GET_CODE(rc));
-        flag = true;
-        return;
-    }
-    else if (GPIO_INVALID_HANDLE == handle)
-    {
-        fprintf(stderr, "GPIO module %s handle is invalid.\n", HW_MODULE_NAME);
-        flag = true;
-        return;
-    }
-
-    for (auto pinNum : pinArray)
-    {
-        rc = GpioSetMode(handle, pinNum, GPIO_DIR_OUT);
-        if (rcOk != rc)
+        BspError rc = BspInit(NULL);
+        if (rc != BSP_EOK)
         {
-            fprintf(stderr, "GpioSetMode for module %s pin %u failed, error code: %d.\n", HW_MODULE_NAME, pinNum, RC_GET_CODE(rc));
-            flag = true;
-            return;
+            fprintf(stderr, "Failed to initialize BSP\n");
+            return EXIT_FAILURE;
+        }
+
+        rc = BspSetConfig("gpio0", "raspberry_pi4b.default");
+        if (rc != BSP_EOK)
+        {
+            fprintf(stderr, "Failed to set mux configuration for gpio0 module\n");
+            return EXIT_FAILURE;
         }
     }
-    
-    GpioOut(handle,  6, 1);
-    GpioOut(handle, 26, 1);
+#endif
 
-    stop();
-}
-
-int GPIOController::run(uint16_t command)
-{
-    uint16_t op = command & MQTT_MASK;
-    unsigned int arg = static_cast<unsigned int>(command >> 4)*10;
-    
-    fprintf(stderr, "Robot command: %d with %d\n", op, arg);
-    
-    switch(op)
+    if (GpioInit())
     {
-        case COMMAND::FORWARD:
-            return forward(arg);
-        case COMMAND::BACK:
-            return back(arg);
-        case COMMAND::LEFT:
-            return left(arg);
-        case COMMAND::RIGHT:
-            return right(arg);
-        case COMMAND::STOP:
-            return stop();
+        fprintf(stderr, "GpioInit failed\n");
+        return EXIT_FAILURE;
     }
-}
 
-int GPIOController::forward(unsigned int time)
-{
-    fprintf(stderr, "Robot forward\n");
-    Retcode rc = rcOk;
-    
-    rc |= GpioOut(handle, 12, 1);
-    rc |= GpioOut(handle, 13, 0);
-    rc |= GpioOut(handle, 20, 1);
-    rc |= GpioOut(handle, 21, 0);
-    
-    usleep(time);
-    rc |= stop();
-    return (rcOk == rc); 
-}
-
-int GPIOController::back(unsigned int time)
-{
-    fprintf(stderr, "Robot back\n");
-    Retcode rc = rcOk;
-    
-    rc |= GpioOut(handle, 12, 0);
-    rc |= GpioOut(handle, 13, 1);
-    rc |= GpioOut(handle, 20, 0);
-    rc |= GpioOut(handle, 21, 1);
-    
-    usleep(time);
-    rc |= stop();
-    return (rcOk == rc); 
-}
-
-int GPIOController::right(unsigned int time)
-{
-    fprintf(stderr, "Robot right\n");
-    Retcode rc = rcOk;
-    
-    rc |= GpioOut(handle, 12, 1);
-    rc |= GpioOut(handle, 13, 0);
-    rc |= GpioOut(handle, 20, 0);
-    rc |= GpioOut(handle, 21, 0);
-    
-    usleep(time);
-    rc |= stop();
-    return (rcOk == rc); 
-}
-
-int GPIOController::left(unsigned int time)
-{
-    fprintf(stderr, "Robot left\n");
-    Retcode rc = rcOk;
-    
-    rc |= GpioOut(handle, 12, 1);
-    rc |= GpioOut(handle, 13, 0);
-    rc |= GpioOut(handle, 20, 0);
-    rc |= GpioOut(handle, 21, 0);
-    
-    usleep(time);
-    rc |= stop();
-    return (rcOk == rc); 
-}
-
-int GPIOController::stop()
-{
-    fprintf(stderr, "Robot stop\n");
-    Retcode rc = rcOk;
-    
-    rc |= GpioOut(handle, 12, 0);
-    rc |= GpioOut(handle, 21, 0);
-    rc |= GpioOut(handle, 13, 0);
-    rc |= GpioOut(handle, 20, 0);
-    
-    return (rcOk == rc);
-}
-
-GPIOController::~GPIOController()
-{
-    GpioOut(handle,  6, 0);
-    GpioOut(handle, 26, 0);
-    
-    if (GPIO_INVALID_HANDLE != handle)
-    {   
-        Retcode rc = GpioClosePort(handle);
-        if (rcOk != rc)
-        {
-            fprintf(stderr, "GpioClosePort for %s port failed, error code: %d.\n", HW_MODULE_NAME, RC_GET_CODE(rc));
-        }
-    }
-}
-
-/*
-    if (rcOk == rc)
+    /* initialize and setup gpio0 port */
+    GpioHandle handle = NULL;
+    if (GpioOpenPort("gpio0", &handle) || handle == GPIO_INVALID_HANDLE)
     {
-        for (rtl_uint32_t i = GPIO_PIN_NUM; i != 0; i--)
-        {
-            rtl_uint32_t pinNum = i - 1;
-            if (false == IsExceptionPin(pinNum))
-            {
-                rc = GpioOut(handle, pinNum, GPIO_HIGH_LEVEL);
-                if (rcOk != rc)
-                {
-                    fprintf(stderr, "GpioOut 1 for module %s pin %u failed, "
-                            "error code: %d.\n", HW_MODULE_NAME, pinNum,
-                            RC_GET_CODE(rc));
-                    break;
-                }
-                else
-                {
-                    fprintf(stderr, "Module %s pin %u is set to 1.\n",
-                            HW_MODULE_NAME, pinNum);
-                    sleep(DELAY_S);
-
-                    rc = GpioOut(handle, pinNum, GPIO_LOW_LEVEL);
-                    if (rcOk != rc)
-                    {
-                        fprintf(stderr, "GpioOut 0 for module %s pin %u "
-                                "failed, error code: %d.\n",
-                                HW_MODULE_NAME, pinNum, RC_GET_CODE(rc));
-                        break;
-                    }
-
-                    fprintf(stderr, "Module %s pin %u is set to 0.\n",
-                            HW_MODULE_NAME, pinNum);
-                }
-            }
-        }
+        fprintf(stderr, "GpioOpenPort failed\n");
+        return EXIT_FAILURE;
     }
-*/
+
+    GpioSetMode(handle, GPIO_PIN_NUM_IN1, GPIO_DIR_OUT);
+    GpioSetMode(handle, GPIO_PIN_NUM_IN2, GPIO_DIR_OUT);
+    GpioSetMode(handle, GPIO_PIN_NUM_IN3, GPIO_DIR_OUT);
+    GpioSetMode(handle, GPIO_PIN_NUM_IN4, GPIO_DIR_OUT);
+    GpioSetMode(handle, GPIO_PIN_NUM_ENA, GPIO_DIR_OUT);
+    GpioSetMode(handle, GPIO_PIN_NUM_ENB, GPIO_DIR_OUT);
+
+    fprintf(stderr, "Starting move (%s)\n", cmd);
+    GpioHandle* p_handle = &handle;
+    
+    nlohmann::json j = nlohmann::json::parse(cmd);
+    
+    std::string cmd_type = j.value("cmd", "");
+    if(cmd_type.empty())
+    {
+        std::cout << "No command type!" << std::endl;
+        return 1;
+    }
+    
+    unsigned int cmd_arg = static_cast<unsigned int>(stod(j.value("val", "-1.0")));
+    if(cmd_arg == -1.0)
+    {
+        std::cout << "No command argument!" << std::endl;
+        return 1;
+    }
+    
+    cmd_arg *= 1000000;
+    
+    if(cmd_type == "back")
+    {
+      forward(p_handle);
+      usleep(cmd_arg);
+      stop(p_handle);
+    }
+    else if(cmd_type == "forward")
+    {
+      backward(p_handle);
+      usleep(cmd_arg);
+      stop(p_handle);
+    }
+    else if(cmd_type == "right")
+    {
+      right(p_handle);
+      usleep(cmd_arg);
+      stop(p_handle);
+    }
+    else if(cmd_type == "left")
+    {
+      left(p_handle);
+      usleep(cmd_arg);
+      stop(p_handle);
+    }
+     else if(cmd_type == "stop")
+    {
+      stop(p_handle);
+    }
+
+    if(GpioClosePort(handle))
+    {
+        fprintf(stderr, "GpioClosePort failed\n");
+        return EXIT_FAILURE;
+    }
+
+    fprintf(stderr, "Test finished.\n");
+
+    return EXIT_SUCCESS;
+}

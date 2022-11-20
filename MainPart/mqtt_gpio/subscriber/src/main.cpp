@@ -3,24 +3,40 @@
 #include <iostream>
 #include <memory>
 
+
 #include <platform/platform.h>
 #include <kos_net.h>
 
 #include <gpio/gpio.h>
 #include <stdbool.h>
 
+#if defined(__arm__) || defined(__aarch64__)
+#include <bsp/bsp.h>
+#endif
 #include <rtl/countof.h>
 #include <rtl/retcode_hr.h>
 
+
+#include "gpiomodule.h"
+
 #include "general.h"
 #include "subscriber.h"
+
+// should be global defines
+#define prINF "INF"
+#define prDBG "DBG"
+#define prINI "INIT"
+#define prERR "ERROR"
+#define prWRN "WRN"
+
+#define opOK "OK\n"
+#define opFAIL "FAILED\n"
+
 
 namespace consts {
 constexpr const char *DefaultMqttAddress = "10.0.2.2";
 constexpr int DefaultMqttUnencryptedPort = 1883;
 constexpr int PublicationIntervalInSec = 5;
-constexpr const char *DefaultUsername = "kokos";
-constexpr const char *DefaultPassword = "testpswd";
 } // namespace consts
 
 static std::string GetBrokerAddress()
@@ -70,6 +86,7 @@ void print(const char* msg, const char* prefix = nullptr)
     else printf("%s", msg);
 }
 
+
 int main(void)
 {
     if (!wait_for_network())
@@ -80,15 +97,11 @@ int main(void)
     }
 
     sleep(5);
-    
-    print("[INIT] Starting GPIO... \n");
-    gpioctrl = new GPIOCtrl();
-    print("[INIT] Finished\n");
-
     mosqpp::lib_init();
 
-    auto sub = std::make_unique<Subscriber>("subscriber", GetBrokerAddress().c_str(), GetBrokerPort());
-
+    auto sub = std::make_unique<Subscriber>(
+        "subscriber", GetBrokerAddress().c_str(), GetBrokerPort());
+    gpiomain("{\"cmd\": \"forward\", \"val\": \"1.0\"}");
     if (sub)
     {
         sub->loop_forever();
