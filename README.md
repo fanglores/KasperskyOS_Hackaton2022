@@ -4,6 +4,12 @@ Repository for KasperskyOS hackaton by Kaspersky Laboratory based at MAI univers
 ## Repository  
 ### Quick Access
 [Used docker tools](Qualification/Task1) - folder, containing used dockerfile and necessary bash scripts    
+[Used bash scripts](MainPart/mqtt_gpio) - folder, containing used bash scripts, developed for comfort development   
+
+[Qualification Task 1](Qualification/Task1)   
+[Qualification Task 2](Qualification/Task2)   
+[Qualification Task 3](Qualification/Task3)  
+[Qualification Task 4](Qualification/Task4)  
   
 [Latest working version](MainPart/monolith_client) - folder, containing tested, dirty, but working code  
 [Latest improved code version](MainPart/mqtt_gpio) - folder, containing clean, modern code, but what sometimes causes an unknown error on Raspberry Pi  
