@@ -1,6 +1,10 @@
 ## KasperskyOS_Hackaton2022
 Repository for KasperskyOS hackaton by Kaspersky Laboratory based at MAI university.  
 
+## Desription
+This project is the robot based on Raspberry Pi 4B with KasperskyOS on board. Robot can be controlled via MQTT protocol. Encrypted password authentification will be used. Robot receives a JSON command, parses and executes it.  
+This client-server architecture could be used at different storage facilities like robotic Amazon storage. The system produces very high level of cybersecurity. 
+  
 ## Repository  
 ### Quick Access
 [Used docker tools](Qualification/Task1) - folder, containing used dockerfile and necessary bash scripts    
