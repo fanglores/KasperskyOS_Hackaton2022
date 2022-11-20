@@ -1,57 +1,52 @@
+/* © 2021 AO Kaspersky Lab */
 #ifndef _MOSQUITTO_SUBSCRIBER_H
 #define _MOSQUITTO_SUBSCRIBER_H
-
 #pragma once
+#include <stdio.h>
+#include <stdlib.h>
 
+#include <gpio/gpio.h>
+#include <stdbool.h>
+#include <sys/cdefs.h>
+#include <rtl/countof.h>
+#include <unistd.h>
 #include <mosquittopp.h>
 #include <rtl/compiler.h>
-#include <iostream>
-#include <string>
-#include "json.hpp"
-#include <assert.h>
-#include <map>
-#include "gpio.h"
-#include "common.h"
+#include <bsp/bsp.h>
 
-const std::map <std::string, uint16_t> COMMAND_MAPPING
+#define HW_MODULE_NAME  "gpio0"
+#define HW_MODULE_CFG   "raspberry_pi4b.default"
+
+const rtl_uint32_t pinArray[6] = {6, 12, 13, 20, 21, 26};
+
+class GPIOCtrl
 {
-    {"stop",    COMMAND::STOP},
-    {"forward", COMMAND::FORWARD},
-    {"back",    COMMAND::BACK},
-    {"left",    COMMAND::LEFT},
-    {"right",   COMMAND::RIGHT}
+private:
+    GpioHandle gphandle;
+    int forward(unsigned int t);
+    int back(unsigned int t);
+    int right(unsigned int t);
+    int left(unsigned int t);
+    int stop();
+public:
+    GPIOCtrl();
+    int run(uint16_t cmd);
+    ~GPIOCtrl();
 };
 
-struct JSON_command
-{
-    uint16_t type;
-    uint16_t arg;
-    
-    uint16_t to_gpio()
-    {   
-        if (arg >= 1<<13) std::cout << "Warning! Argument part has been lost!" << std::endl;
-        return static_cast<uint16_t>(type | (arg << 4));
-    }
-};
-
-void run_command(const std::string& json_string);
+static GPIOCtrl* gpioctrl;
 
 class Subscriber : public mosqpp::mosquittopp
 {
-private:
-    GPIOController* gpioctrl;
 public:
-    Subscriber(const char *id, const char *host, int port, bool& flag);
+    Subscriber(const char *id, const char *host, int port);
     ~Subscriber() {};
-
+    void run_command(const std::string& str);
     void on_connect(int rc) override;
     void on_message(const struct mosquitto_message *message) override;
     void on_subscribe(__rtl_unused int        mid,
                       __rtl_unused int        qos_count,
                       __rtl_unused const int *granted_qos) override;
-
-    void run_command(const std::string& json_str);
-    GPIOController* get_gpio();
 };
 
 #endif // _MOSQUITTO_SUBSCRIBER_H

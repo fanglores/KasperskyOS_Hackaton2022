@@ -1,5 +1,8 @@
 /* Solution security policy of the "mqtt subscriber" example. */
 
+use trusted._
+
+
 /* Assigning the execute interface. */
 execute: kl.core.Execute
 
@@ -28,74 +31,6 @@ error {
     grant ()
 }
 
-execute src=Einit, dst=mosquitto.Subscriber
-{
-    grant()
-}
-
-execute src=Einit, dst=kl.drivers.GPIO
-{
-    grant()
-}
-
-request src=mosquitto.Subscriber, dst=kl.core.Core
-{
-    grant()
-}
-
-response src=kl.core.Core, dst=mosquitto.Subscriber
-{
-    grant()
-}
-
-request src=kl.drivers.GPIO, dst=kl.core.Core
-{
-    grant()
-}
-
-response src=kl.core.Core, dst=kl.drivers.GPIO
-{
-    grant()
-}
-
-request src=mosquitto.Subscriber, dst=kl.drivers.GPIO
-{
-    grant()
-}
-
-response src=kl.drivers.GPIO, dst=mosquitto.Subscriber
-{
-    grant()
-}
-
-/**
- * Allows the tasks with the Einit class to start the tasks with the kl.drivers.BSP class.
- */
-execute src=Einit, dst=kl.drivers.BSP
-{
-    grant()
-}
-
-request src=mosquitto.Subscriber, dst=kl.drivers.BSP
-{
-    grant()
-}
-
-response src=kl.drivers.BSP, dst=mosquitto.Subscriber
-{
-    grant()
-}
-
-request src=kl.drivers.BSP, dst=kl.core.Core
-{
-    grant()
-}
-
-response src=kl.core.Core, dst=kl.drivers.BSP
-{
-    grant()
-}
-
 /**
  * Allows the tasks with the Einit class to start the tasks with the kl.drivers.BSP class.
  */
@@ -119,6 +54,18 @@ response src = kl.core.Core, dst = kl.drivers.BSP
     grant()
 }
 
+request src=mosquitto.Subscriber, dst=kl.drivers.BSP
+{
+    grant()
+}
+
+response src=kl.drivers.BSP, dst=mosquitto.Subscriber
+{
+    grant()
+}
+
+
+
 /**
  * Allows the tasks with the Einit class to start the tasks with the kl.drivers.GPIO class.
  */
@@ -141,6 +88,19 @@ response src = kl.core.Core, dst = kl.drivers.GPIO
 {
     grant()
 }
+
+request src=mosquitto.Subscriber, dst=kl.drivers.GPIO
+{
+    grant()
+}
+
+response src=kl.drivers.GPIO, dst=mosquitto.Subscriber
+{
+    grant()
+}
+
+
+
 
 /**
  * Allows the KasperskyOS kernel to start itself and tasks with the Einit class.

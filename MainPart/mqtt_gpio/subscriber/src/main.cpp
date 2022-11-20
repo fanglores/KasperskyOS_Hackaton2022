@@ -3,7 +3,14 @@
 #include <iostream>
 #include <memory>
 
+#include <platform/platform.h>
 #include <kos_net.h>
+
+#include <gpio/gpio.h>
+#include <stdbool.h>
+
+#include <rtl/countof.h>
+#include <rtl/retcode_hr.h>
 
 #include "general.h"
 #include "subscriber.h"
@@ -12,6 +19,8 @@ namespace consts {
 constexpr const char *DefaultMqttAddress = "10.0.2.2";
 constexpr int DefaultMqttUnencryptedPort = 1883;
 constexpr int PublicationIntervalInSec = 5;
+constexpr const char *DefaultUsername = "kokos";
+constexpr const char *DefaultPassword = "testpswd";
 } // namespace consts
 
 static std::string GetBrokerAddress()
@@ -54,47 +63,34 @@ static int GetBrokerPort()
     }
 }
 
-void gpio_test()
+
+void print(const char* msg, const char* prefix = nullptr)
 {
-    bool f;
-    GPIOController* gpioctrl = new GPIOController(f);
-    uint16_t cmd1 = static_cast<uint16_t>(COMMAND::FORWARD | (1 << 4));
-    gpioctrl->run(cmd1);
-    sleep(1);
-    uint16_t cmd2 = static_cast<uint16_t>(COMMAND::BACK | (2 << 4));
-    gpioctrl->run(cmd2);
-    sleep(1);
-    uint16_t cmd3 = static_cast<uint16_t>(COMMAND::LEFT | (1 << 4));
-    gpioctrl->run(cmd3);
-    sleep(1);
-    uint16_t cmd4 = static_cast<uint16_t>(COMMAND::RIGHT | (2 << 4));
-    gpioctrl->run(cmd4);
-    
-    exit(0);
+    if(prefix) printf("[%s] %s\n", prefix, msg);
+    else printf("%s", msg);
 }
 
 int main(void)
 {
     if (!wait_for_network())
     {
-        std::cerr << app::AppTag << "Error: Wait for network failed!" << std::endl;
+        std::cerr << app::AppTag << "Error: Wait for network failed!"
+                  << std::endl;
         return EXIT_FAILURE;
     }
 
+    sleep(5);
+    
+    print("[INIT] Starting GPIO... \n");
+    gpioctrl = new GPIOCtrl();
+    print("[INIT] Finished\n");
+
     mosqpp::lib_init();
-    
-    bool flag = false;
-    auto sub = std::make_unique<Subscriber>("subscriber", GetBrokerAddress().c_str(), GetBrokerPort(), flag);
-    
-    if(flag)
-    {
-        mosqpp::lib_cleanup();
-        return EXIT_FAILURE;
-    }
-    
+
+    auto sub = std::make_unique<Subscriber>("subscriber", GetBrokerAddress().c_str(), GetBrokerPort());
+
     if (sub)
     {
-        sub->get_gpio()->run(static_cast<uint16_t>(COMMAND::FORWARD | (50 << 4)));
         sub->loop_forever();
     }
 
